@@ -1,0 +1,81 @@
+{
+  "name": "@kairala/legendei",
+  "main": "index.js",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "expo start -c",
+    "dev:web": "expo start -c --web",
+    "dev:android": "expo start -c --android",
+    "android": "expo start -c --android",
+    "ios": "expo start -c --ios",
+    "web": "expo start -c --web",
+    "clean": "rm -rf .expo node_modules",
+    "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css",
+    "build:android:staging": "eas build --platform android --profile staging",
+    "build:ios:staging": "eas build --platform ios --profile staging --auto-submit --no-wait",
+    "submit:android:staging": "eas submit --platform android --latest --profile staging",
+    "submit:ios:staging": "eas submit --platform ios --latest --profile staging",
+    "buildAndSubmit:all:staging": "eas build --platform all --profile staging --auto-submit --non-interactive --no-wait",
+    "build:ios:production": "eas build --platform ios --profile production --no-wait",
+    "buildAndSubmit:ios:production": "eas build --platform ios --profile production --auto-submit --no-wait",
+    "submit:ios:production": "eas submit --platform ios --latest --profile production --no-wait"
+  },
+  "dependencies": {
+    "@react-navigation/native": "^7.0.0",
+    "@rn-primitives/avatar": "~1.1.0",
+    "@rn-primitives/label": "^1.1.0",
+    "@rn-primitives/portal": "~1.2.0",
+    "@rn-primitives/progress": "~1.1.0",
+    "@rn-primitives/select": "^1.1.0",
+    "@rn-primitives/slot": "~1.1.0",
+    "@rn-primitives/tooltip": "~1.1.0",
+    "@rn-primitives/types": "~1.1.0",
+    "@tanstack/react-query": "^5.76.0",
+    "axios": "^1.9.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "expo": "^53.0.7",
+    "expo-clipboard": "~7.1.4",
+    "expo-file-system": "~18.1.10",
+    "expo-image-picker": "~16.1.4",
+    "expo-linking": "~7.1.4",
+    "expo-navigation-bar": "~4.2.4",
+    "expo-router": "~5.0.5",
+    "expo-splash-screen": "~0.30.8",
+    "expo-status-bar": "~2.2.3",
+    "expo-system-ui": "~5.0.7",
+    "lucide-react-native": "^0.507.0",
+    "nativewind": "^4.1.23",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-native": "0.79.2",
+    "react-native-reanimated": "~3.17.5",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "^4.10.0",
+    "react-native-svg": "15.11.2",
+    "react-native-web": "~0.20.0",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss": "3.3.5",
+    "tailwindcss-animate": "^1.0.7",
+    "toastify-react-native": "^7.2.0",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@tanstack/eslint-plugin-query": "^5.74.7",
+    "@types/react": "~19.0.14",
+    "typescript": "^5.8.3"
+  },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "listUnknownPackages": false,
+        "exclude": [
+          "lucide-react-native"
+        ]
+      }
+    }
+  },
+  "private": true,
+  "packageManager": "pnpm@10.7.0+sha512.6b865ad4b62a1d9842b61d674a393903b871d9244954f652b8842c2b553c72176b278f64c463e52d40fff8aba385c235c8c9ecf5cc7de4fd78b8bb6d49633ab6"
+}

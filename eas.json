@@ -1,0 +1,44 @@
+{
+  "cli": {
+    "version": ">= 10.1.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "staging": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://fa53irs7pg.execute-api.us-east-1.amazonaws.com/hml/"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://fa53irs7pg.execute-api.us-east-1.amazonaws.com/hml/"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "thiago@kairala.com.br",
+        "ascAppId": "6745802247",
+        "appleTeamId": "57K8XL9JUJ"
+      }
+    },
+    "staging": {
+      "android": {
+        "serviceAccountKeyPath": "./config/googleServiceAccount.json",
+        "track": "alpha"
+      },
+      "ios": {
+        "appleId": "thiago@kairala.com.br",
+        "ascAppId": "6745802247",
+        "appleTeamId": "57K8XL9JUJ"
+      }
+    }
+  }
+}
