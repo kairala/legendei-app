@@ -51,7 +51,7 @@ export const InstagramPost = ({ image, caption }: Props) => {
               Toast.success("Copiado com sucesso!");
             }}
           >
-            <Text numberOfLines={2}>{caption}</Text>
+            <Text>{caption}</Text>
           </Pressable>
         </View>
         <Pressable

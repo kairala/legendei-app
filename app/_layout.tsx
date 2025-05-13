@@ -17,6 +17,7 @@ import { ThemeToggle } from "~/components/ThemeToggle";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ToastManager from "toastify-react-native";
+import { AuthProvider } from "../src/features/auth/useAuthSession";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -59,28 +60,56 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <QueryClientProvider client={queryClient}>
-        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        <Stack>
-          <Stack.Screen
-            name="index"
-            options={{
-              title: "Login",
-              headerRight: () => <ThemeToggle />,
-            }}
-          />
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+          <Stack>
+            <Stack.Screen
+              name="index"
+              options={{
+                title: "Login",
+                headerShown: false,
+                headerRight: () => <ThemeToggle />,
+                headerStyle: {
+                  backgroundColor: isDarkColorScheme
+                    ? DARK_THEME.colors.background
+                    : LIGHT_THEME.colors.background,
+                },
+              }}
+            />
 
-          <Stack.Screen
-            name="upload"
-            options={{
-              title: "Consiga sua legenda",
-              headerRight: () => <ThemeToggle />,
-            }}
-          />
-        </Stack>
-        <PortalHost />
-        <ToastManager />
-      </QueryClientProvider>
+            <Stack.Screen
+              name="signup"
+              options={{
+                title: "Criar conta",
+                headerRight: () => <ThemeToggle />,
+                headerShown: false,
+                headerStyle: {
+                  backgroundColor: isDarkColorScheme
+                    ? DARK_THEME.colors.background
+                    : LIGHT_THEME.colors.background,
+                },
+              }}
+            />
+
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                title: "Consiga sua legenda",
+                headerShown: false,
+                headerRight: () => <ThemeToggle />,
+                headerStyle: {
+                  backgroundColor: isDarkColorScheme
+                    ? DARK_THEME.colors.background
+                    : LIGHT_THEME.colors.background,
+                },
+              }}
+            />
+          </Stack>
+          <PortalHost />
+          <ToastManager />
+        </QueryClientProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

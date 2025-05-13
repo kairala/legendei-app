@@ -1,32 +1,49 @@
 import * as React from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { Text } from "~/components/ui/text";
 import * as ImagePicker from "expo-image-picker";
-import { Button } from "../components/ui/button";
-import * as FileSystem from "expo-file-system";
+import { Button } from "~/components/ui/button";
 import {
   PlatformName,
   PlatformSelect,
-} from "../components/components/PlatformSelect";
-import { StyleName, StyleSelect } from "../components/components/StyleSelect";
-import { useUploadFileMutation } from "../src/features/useUploadFile";
-import { useGenerateCaptionMutation } from "../src/features/useGenerateCaption";
-import { BlockQuote } from "../components/ui/typography";
-import { Progress } from "../components/ui/progress";
-import { Clipboard } from "~/lib/icons/Clipboard";
-import * as ExpoClipboard from "expo-clipboard";
-import { Toast } from "toastify-react-native";
-import { InstagramPost } from "../components/components/PlatformPosts/Instagram";
-import { LinkedinPost } from "../components/components/PlatformPosts/Linkedin";
-import { TickTokPost } from "../components/components/PlatformPosts/TickTok";
-import { FacebookPost } from "../components/components/PlatformPosts/Facebook";
+} from "~/components/components/PlatformSelect";
+import { StyleName, StyleSelect } from "~/components/components/StyleSelect";
+import {
+  UploadFileResponseType,
+  useUploadFileMutation,
+} from "~/src/features/storage/useUploadFile";
+import { useGenerateCaptionMutation } from "~/src/features/ai/useGenerateCaption";
+import { Progress } from "~/components/ui/progress";
+import { InstagramPost } from "~/components/components/PlatformPosts/Instagram";
+import { LinkedinPost } from "~/components/components/PlatformPosts/Linkedin";
+import { TickTokPost } from "~/components/components/PlatformPosts/TickTok";
+import { FacebookPost } from "~/components/components/PlatformPosts/Facebook";
+import { ImagePickerAsset } from "expo-image-picker";
+import { TestIds, useInterstitialAd } from "react-native-google-mobile-ads";
+import { adUnits } from "../../components/ads/units";
 
 export default function Screen() {
-  const [image, setImage] = React.useState<string | null>(null);
-  const [imageBase64, setImageBase64] = React.useState<string | null>(null);
+  const [image, setImage] = React.useState<ImagePickerAsset | null>(null);
   const [platform, setPlatform] = React.useState<PlatformName>("Instagram");
   const [style, setStyle] = React.useState<StyleName>("criativo");
   const [caption, setCaption] = React.useState<string | null>(null);
+  const { isLoaded, load, show } = useInterstitialAd(
+    __DEV__
+      ? TestIds.INTERSTITIAL
+      : Platform.OS === "android"
+        ? adUnits.INTERISTICAL.ANDROID
+        : adUnits.INTERISTICAL.IOS,
+    {
+      requestNonPersonalizedAdsOnly: true,
+    }
+  );
+
+  React.useEffect(() => {
+    if (isLoaded) {
+      return;
+    }
+    load();
+  }, [load, isLoaded]);
 
   const [mediaLibraryPermissionStatus, requestMediaLibraryPermission] =
     ImagePicker.useMediaLibraryPermissions();
@@ -35,17 +52,21 @@ export default function Screen() {
 
   const uploadFileMutation = useUploadFileMutation({
     onSuccess: (response) => {
+      const body = JSON.parse(response.body) as UploadFileResponseType;
       generateCaptionMutation.mutate({
-        imageUrl: response.data.body.fileUrl,
+        imageUrl: body.url,
         style: style,
-        platform: platform,
+        network: platform,
       });
     },
   });
 
   const generateCaptionMutation = useGenerateCaptionMutation({
     onSuccess: (response) => {
-      setCaption(response.data.body.caption);
+      setCaption(response.data.caption);
+    },
+    onError: (e) => {
+      console.log("Error generating caption", e.response);
     },
   });
 
@@ -61,25 +82,13 @@ export default function Screen() {
     return 100;
   }, [uploadFileMutation.isPending, generateCaptionMutation.isPending]);
 
-  const getBase64 = async (uri: string) => {
-    if (!uri) {
-      return null;
-    }
-
-    const base64 = await FileSystem.readAsStringAsync(uri, {
-      encoding: "base64",
-    });
-
-    return `data:image/png;base64,${base64}`;
-  };
-
   React.useEffect(() => {
-    if (!imageBase64) {
+    if (!image) {
       return;
     }
 
     handleSubmit();
-  }, [imageBase64]);
+  }, [image]);
 
   const pickImage = async () => {
     if (!mediaLibraryPermissionStatus?.granted) {
@@ -100,8 +109,7 @@ export default function Screen() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      setImageBase64(await getBase64(result.assets[0].uri));
+      setImage(result.assets[0]);
     }
   };
 
@@ -124,20 +132,19 @@ export default function Screen() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      setImageBase64(await getBase64(result.assets[0].uri));
+      setImage(result.assets[0]);
     }
   };
 
   const handleSubmit = async () => {
-    if (!imageBase64) {
-      console.log("base64 null");
+    if (!image) {
       return;
     }
 
     setCaption(null);
+
     uploadFileMutation.mutate({
-      file: imageBase64,
+      image,
     });
   };
 
@@ -188,45 +195,31 @@ export default function Screen() {
             generateCaptionMutation.isPending ? (
               <Progress value={progress} className="web:w-[60%]" />
             ) : null}
-
-            {caption && (
-              <View className="justify-center items-center gap-5 p-6 bg-secondary/30 flex flex-row">
-                <BlockQuote className="flex-1">{caption}</BlockQuote>
-                <Button
-                  onPress={() => {
-                    ExpoClipboard.setStringAsync(caption.replaceAll('"', ""));
-                    Toast.success("Copiado com sucesso!");
-                  }}
-                >
-                  <Clipboard className="text-secondary" />
-                </Button>
-              </View>
-            )}
           </View>
         </View>
       )}
 
       {caption && platform === "Instagram" && image && (
         <View className="flex-1">
-          <InstagramPost image={image} caption={caption} />
+          <InstagramPost image={image.uri} caption={caption} />
         </View>
       )}
 
       {caption && image && platform === "LinkedIn" && (
         <View className="flex-1">
-          <LinkedinPost image={image} caption={caption} />
+          <LinkedinPost image={image.uri} caption={caption} />
         </View>
       )}
 
       {caption && image && platform === "TickTok" && (
         <View className="flex-1">
-          <TickTokPost image={image} caption={caption} />
+          <TickTokPost image={image.uri} caption={caption} />
         </View>
       )}
 
       {caption && image && platform === "Facebook" && (
         <View className="flex-1">
-          <FacebookPost image={image} caption={caption} />
+          <FacebookPost image={image.uri} caption={caption} />
         </View>
       )}
 
@@ -240,8 +233,10 @@ export default function Screen() {
           }
           onPress={() => {
             setImage(null);
-            setImageBase64(null);
             setCaption(null);
+            if (isLoaded) {
+              show();
+            }
           }}
           className="flex-1"
         >

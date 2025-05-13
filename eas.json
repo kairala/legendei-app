@@ -11,7 +11,7 @@
     "staging": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://fa53irs7pg.execute-api.us-east-1.amazonaws.com/hml/"
+        "EXPO_PUBLIC_API_URL": "https://api.hml.legendei.io"
       }
     },
     "production": {
@@ -27,11 +27,13 @@
         "appleId": "thiago@kairala.com.br",
         "ascAppId": "6745802247",
         "appleTeamId": "57K8XL9JUJ"
+      },
+      "android": {
+        "track": "production"
       }
     },
     "staging": {
       "android": {
-        "serviceAccountKeyPath": "./config/googleServiceAccount.json",
         "track": "alpha"
       },
       "ios": {

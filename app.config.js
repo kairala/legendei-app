@@ -1,33 +1,6 @@
-const IS_DEV = process.env.LENGENDEI_ENV === "dev";
-const IS_STAGING = process.env.LENGENDEI_ENV === "staging";
-
-const getUniqueIdentifier = () => {
-  if (IS_DEV) {
-    return "br.com.kairala.legendei.dev";
-  }
-
-  if (IS_STAGING) {
-    return "br.com.kairala.legendei.staging";
-  }
-
-  return "br.com.kairala.legendei";
-};
-
-const getAppName = () => {
-  if (IS_DEV) {
-    return "Legendei (Dev)";
-  }
-
-  if (IS_STAGING) {
-    return "Legendei (Staging)";
-  }
-
-  return "Legendei";
-};
-
 export default {
   expo: {
-    name: getAppName(),
+    name: "Legendei",
     slug: "legendei",
     version: "1.0.1",
     orientation: "portrait",
@@ -36,13 +9,13 @@ export default {
     scheme: "legendei",
     ios: {
       supportsTablet: true,
-      bundleIdentifier: getUniqueIdentifier(),
+      bundleIdentifier: "br.com.kairala.legendei",
       config: {
         usesNonExemptEncryption: false,
       },
     },
     android: {
-      package: getUniqueIdentifier(),
+      package: "br.com.kairala.legendei",
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#ffffff",
@@ -56,6 +29,21 @@ export default {
           autoHide: true,
           backgroundColor: "#09090b",
           image: "./assets/images/splash.png",
+        },
+      ],
+      [
+        "expo-secure-store",
+        {
+          configureAndroidBackup: true,
+          faceIDPermission:
+            "Allow $(PRODUCT_NAME) to access your Face ID biometric data.",
+        },
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          androidAppId: "ca-app-pub-9184686440494791~7198467153",
+          iosAppId: "ca-app-pub-9184686440494791~5955561886",
         },
       ],
     ],

@@ -51,7 +51,7 @@ export const PlatformSelect = ({
       >
         <SelectTrigger className="w-full">
           <SelectValue
-            className="text-foreground text-sm native:text-lg"
+            className="text-sm native:text-lg"
             placeholder="Selecione uma Plataforma"
           />
         </SelectTrigger>

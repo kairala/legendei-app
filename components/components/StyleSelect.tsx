@@ -123,7 +123,7 @@ export const StyleSelect = ({
       >
         <SelectTrigger className="w-full">
           <SelectValue
-            className="text-foreground text-sm native:text-lg"
+            className="text-sm native:text-lg"
             placeholder="Selecione um Estilo"
           />
         </SelectTrigger>
