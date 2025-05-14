@@ -47,6 +47,21 @@ export default function TabLayout() {
             },
           }}
         />
+
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: "",
+            headerRight: () => <ThemeToggle />,
+            tabBarIcon: ({ focused }) => {
+              return (
+                <Quote
+                  className={focused ? "text-primary" : "text-foreground"}
+                />
+              );
+            },
+          }}
+        />
       </Tabs>
 
       <BannerAd

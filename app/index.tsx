@@ -10,6 +10,9 @@ import { Input } from "~/components/ui/input";
 import { Label } from "../components/ui/label";
 import { useSignInMutation } from "../src/features/auth/useSignIn";
 import useAuthSession from "../src/features/auth/useAuthSession";
+import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
 
 // Define Zod schema
 const formSchema = z.object({
@@ -23,9 +26,9 @@ type FormData = z.infer<typeof formSchema>;
 export default function Screen() {
   const router = useRouter();
   const { setAccessToken, setRefreshToken, isAuthenticated } = useAuthSession();
+  const [googleError, setGoogleError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    console.log(isAuthenticated);
     if (isAuthenticated) {
       router.replace("/(tabs)");
     }
@@ -61,6 +64,41 @@ export default function Screen() {
       email: data.email,
       password: data.password,
     });
+  };
+
+  const googleSignIn = async () => {
+    try {
+      const callbackUrl = Linking.createURL("", { scheme: "legendei" });
+
+      let result = await WebBrowser.openAuthSessionAsync(
+        `${process.env.EXPO_PUBLIC_API_URL}/auth/google`,
+        callbackUrl
+      );
+
+      if (result.type === "success") {
+        const url = new URL(result.url);
+        const accessToken = url.searchParams.get("accessToken");
+        const refreshToken = url.searchParams.get("refreshToken");
+        const error = url.searchParams.get("error");
+
+        if (error) {
+          setGoogleError(error);
+          return;
+        }
+
+        if (!accessToken || !refreshToken) {
+          console.error("Missing access token or refresh token");
+          return;
+        }
+
+        await setAccessToken(accessToken);
+        await setRefreshToken(refreshToken);
+
+        router.replace("/(tabs)");
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
   };
 
   return (
@@ -123,9 +161,25 @@ export default function Screen() {
         </Text>
       )}
 
+      {googleError && (
+        <Text className="text-destructive mt-1">{googleError}</Text>
+      )}
+
       <Button className="w-full mt-2" onPress={handleSubmit(onSubmit)}>
         <Text>Entrar</Text>
       </Button>
+
+      {/* Google Sign In Button */}
+      <View className="w-full items-center mt-2">
+        <Text className="my-4">ou</Text>
+        <GoogleSigninButton
+          style={{ width: "100%", height: 48 }}
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Light}
+          onPress={googleSignIn}
+          className="self-center"
+        />
+      </View>
 
       <TouchableOpacity
         onPress={() => console.log("Forgot password")}

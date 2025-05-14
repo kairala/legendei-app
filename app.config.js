@@ -46,6 +46,12 @@ export default {
           iosAppId: "ca-app-pub-9184686440494791~5955561886",
         },
       ],
+      [
+        "expo-web-browser",
+        {
+          experimentalLauncherActivity: true,
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
