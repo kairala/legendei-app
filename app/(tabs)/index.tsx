@@ -21,12 +21,16 @@ import { FacebookPost } from "~/components/components/PlatformPosts/Facebook";
 import { ImagePickerAsset } from "expo-image-picker";
 import { TestIds, useInterstitialAd } from "react-native-google-mobile-ads";
 import { adUnits } from "../../components/ads/units";
+import { useGetMeQuery } from "../../src/features/auth/useMe";
+import { H4 } from "../../components/ui/typography";
+import { useRouter } from "expo-router";
 
 export default function Screen() {
   const [image, setImage] = React.useState<ImagePickerAsset | null>(null);
   const [platform, setPlatform] = React.useState<PlatformName>("Instagram");
   const [style, setStyle] = React.useState<StyleName>("criativo");
   const [caption, setCaption] = React.useState<string | null>(null);
+  const router = useRouter();
   const { isLoaded, load, show } = useInterstitialAd(
     __DEV__
       ? TestIds.INTERSTITIAL
@@ -37,6 +41,78 @@ export default function Screen() {
       requestNonPersonalizedAdsOnly: true,
     }
   );
+
+  const { data: me, refetch: refetchMe } = useGetMeQuery();
+
+  const totalCaptions = React.useMemo(() => {
+    if (!me?.data) {
+      return 0;
+    }
+
+    const { currentPlan } = me.data;
+    if (currentPlan === "free") {
+      return 2;
+    }
+    if (currentPlan === "gold") {
+      return 5;
+    }
+
+    if (currentPlan === "platinum") {
+      return -1;
+    }
+
+    return 2;
+  }, [me?.data]);
+
+  const canCreateCaption = React.useMemo(() => {
+    if (!totalCaptions) {
+      return false;
+    }
+    const { currentPlan, usedCaptionsToday } = me!.data;
+    if (currentPlan === "platinum") {
+      return true;
+    }
+    if (currentPlan === "free") {
+      return usedCaptionsToday < 2;
+    }
+    if (currentPlan === "gold") {
+      return usedCaptionsToday < 5;
+    }
+    return usedCaptionsToday < 2;
+  }, [me?.data, totalCaptions]);
+
+  const buildCaptionLimit = () => {
+    if (!totalCaptions) {
+      return null;
+    }
+
+    const { currentPlan, usedCaptionsToday } = me!.data;
+
+    if (currentPlan === "platinum") {
+      return null;
+    }
+
+    return (
+      <View>
+        <View className="flex flex-row items-center justify-center">
+          <H4 className="">Você usou </H4>
+          <H4
+            className={`font-bold ${usedCaptionsToday < totalCaptions ? "" : "text-red-500"}`}
+          >
+            {usedCaptionsToday}
+          </H4>
+          <H4 className=""> de </H4>
+          <H4 className="font-bold">{totalCaptions}</H4>
+          <H4 className=""> legendas hoje.</H4>
+        </View>
+        {usedCaptionsToday < totalCaptions ? (
+          <Button className="mt-5" onPress={() => router.push("/payment")}>
+            <Text>Altere seu plano para criar mais</Text>
+          </Button>
+        ) : null}
+      </View>
+    );
+  };
 
   React.useEffect(() => {
     if (isLoaded) {
@@ -64,6 +140,7 @@ export default function Screen() {
   const generateCaptionMutation = useGenerateCaptionMutation({
     onSuccess: (response) => {
       setCaption(response.data.caption);
+      refetchMe();
     },
     onError: (e) => {
       console.log("Error generating caption", e.response);
@@ -152,6 +229,13 @@ export default function Screen() {
     <View className="flex flex-col gap-5 p-6 bg-secondary/30 h-full pb-10">
       {!caption && (
         <View className="flex-1 flex flex-col gap-6">
+          <View>
+            <H4 className="text-center">
+              Escolha uma foto e a plataforma para gerar uma legenda.
+            </H4>
+
+            {buildCaptionLimit()}
+          </View>
           <View className="flex flex-row gap-5 ">
             <View className="flex-1">
               <PlatformSelect
@@ -173,11 +257,19 @@ export default function Screen() {
           </View>
 
           <View className="flex flex-row gap-5 justify-between">
-            <Button onPress={pickImage} className="flex-1">
+            <Button
+              onPress={pickImage}
+              className="flex-1"
+              disabled={!canCreateCaption}
+            >
               <Text>Escolha uma Foto</Text>
             </Button>
 
-            <Button onPress={useCamera} className="flex-1">
+            <Button
+              onPress={useCamera}
+              className="flex-1"
+              disabled={!canCreateCaption}
+            >
               <Text>Use a Câmera</Text>
             </Button>
           </View>
@@ -234,7 +326,7 @@ export default function Screen() {
           onPress={() => {
             setImage(null);
             setCaption(null);
-            if (isLoaded) {
+            if (isLoaded && me?.data.currentPlan === "free") {
               show();
             }
           }}

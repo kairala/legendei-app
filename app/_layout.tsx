@@ -93,6 +93,19 @@ export default function RootLayout() {
             />
 
             <Stack.Screen
+              name="payment"
+              options={{
+                title: "Planos",
+                headerRight: () => <ThemeToggle />,
+                headerStyle: {
+                  backgroundColor: isDarkColorScheme
+                    ? DARK_THEME.colors.background
+                    : LIGHT_THEME.colors.background,
+                },
+              }}
+            />
+
+            <Stack.Screen
               name="(tabs)"
               options={{
                 title: "Consiga sua legenda",

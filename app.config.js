@@ -52,6 +52,13 @@ export default {
           experimentalLauncherActivity: true,
         },
       ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          merchantIdentifier: "merchant.com.kairala.legendei",
+          enableGooglePay: true,
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
