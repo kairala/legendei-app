@@ -117,7 +117,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         accessToken: null,
         refreshToken: null,
       });
-      router.replace("/");
+      router.dismissTo("/login");
     } catch (error) {
       console.error("Logout failed", error);
     }

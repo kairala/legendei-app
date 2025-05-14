@@ -42,7 +42,7 @@ export const useAxios = () => {
     if (isAccessExpired) {
       if (isRefreshExpired) {
         logout();
-        router.replace("/");
+        router.dismissTo("/login");
         return;
       }
 
