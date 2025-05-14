@@ -29,6 +29,7 @@ export default {
           autoHide: true,
           backgroundColor: "#09090b",
           image: "./assets/images/splash.png",
+          imageWidth: 200,
         },
       ],
       [

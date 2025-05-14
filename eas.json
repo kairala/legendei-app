@@ -9,17 +9,12 @@
       "distribution": "internal"
     },
     "staging": {
-      "autoIncrement": true,
-      "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.hml.legendei.io",
-        "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "pk_test_51ROlEVPShmhPMi9NvnNVXWD7TtmKdn5vQVlkpPBONfxcsVkzh3yWkXvqS7nHonX3B4M8cLthOM9FCZEDYyhY1M92006NSTXd1b"
-      }
+      "environment": "preview",
+      "autoIncrement": true
     },
     "production": {
-      "autoIncrement": true,
-      "env": {
-        "EXPO_PUBLIC_API_URL": "https://fa53irs7pg.execute-api.us-east-1.amazonaws.com/hml/"
-      }
+      "environment": "production",
+      "autoIncrement": true
     }
   },
   "submit": {
