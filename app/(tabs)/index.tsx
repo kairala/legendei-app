@@ -105,7 +105,7 @@ export default function Screen() {
           <H4 className="font-bold">{totalCaptions}</H4>
           <H4 className=""> legendas hoje.</H4>
         </View>
-        {usedCaptionsToday < totalCaptions ? (
+        {usedCaptionsToday >= totalCaptions ? (
           <Button className="mt-5" onPress={() => router.push("/payment")}>
             <Text>Altere seu plano para criar mais</Text>
           </Button>
