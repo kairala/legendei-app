@@ -18,6 +18,23 @@ import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ToastManager from "toastify-react-native";
 import { AuthProvider } from "../src/features/auth/useAuthSession";
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://630c762f0e621e5faff62ab5cedb68aa@o4509324194938880.ingest.us.sentry.io/4509324196708352',
+
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+
+  // Configure Session Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1,
+  integrations: [Sentry.mobileReplayIntegration(), Sentry.feedbackIntegration()],
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -35,7 +52,7 @@ export {
   ErrorBoundary,
 } from "expo-router";
 
-export default function RootLayout() {
+export default Sentry.wrap(function RootLayout() {
   const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
@@ -125,7 +142,7 @@ export default function RootLayout() {
       </AuthProvider>
     </ThemeProvider>
   );
-}
+});
 
 const useIsomorphicLayoutEffect =
   Platform.OS === "web" && typeof window === "undefined"

@@ -2081,6 +2081,31 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSentry (6.10.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Sentry/HybridSDK (= 8.48.0)
+    - Yoga
   - RNSVG (15.11.2):
     - DoubleConversion
     - glog
@@ -2130,6 +2155,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - Sentry/HybridSDK (8.48.0)
   - SocketRocket (0.7.1)
   - Stripe (24.12.1):
     - StripeApplePay (= 24.12.1)
@@ -2317,6 +2343,7 @@ DEPENDENCIES:
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -2329,6 +2356,7 @@ SPEC REPOS:
     - GoogleUserMessagingPlatform
     - GTMAppAuth
     - GTMSessionFetcher
+    - Sentry
     - SocketRocket
     - Stripe
     - StripeApplePay
@@ -2525,6 +2553,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   stripe-react-native:
@@ -2631,7 +2661,9 @@ SPEC CHECKSUMS:
   RNGoogleSignin: 63dac9d377822a2032e5e2aef2f2811d7413eb55
   RNReanimated: 2313402fe27fecb7237619e9c6fcee3177f08a65
   RNScreens: 5621e3ad5a329fbd16de683344ac5af4192b40d3
+  RNSentry: 838e247af2fe6a2599820f25dccacd30e2142193
   RNSVG: 794f269526df9ddc1f79b3d1a202b619df0368e3
+  Sentry: 1ca8405451040482877dcd344dfa3ef80b646631
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Stripe: 6a37e0d27872cb2c878d404676bd90cc3d7bf04b
   stripe-react-native: 9ea574f576cb3eb03e5b70157329e83192df0af4

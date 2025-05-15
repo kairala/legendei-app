@@ -60,6 +60,14 @@ export default {
           enableGooglePay: true,
         },
       ],
+      [
+        "@sentry/react-native/expo",
+        {
+          url: "https://sentry.io/",
+          project: "mobile",
+          organization: "legendei",
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
