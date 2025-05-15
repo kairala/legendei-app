@@ -52,13 +52,13 @@
       <true/>
     </dict>
     <key>NSCameraUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your camera</string>
+    <string>Legendei a câmera para tirar fotos e podermos gerar legendas para você. Suas fotos serão armazenadas de forma segura e não serão compartilhadas com ninguém.</string>
     <key>NSFaceIDUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your Face ID biometric data.</string>
+    <string>Permirtir o uso do Face ID para desbloquear o aplicativo Legendei.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your photos</string>
+    <string>Legendei as imagens para podermos gerar legendas para você. Suas fotos serão armazenadas de forma segura e não serão compartilhadas com ninguém.</string>
     <key>NSUserActivityTypes</key>
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>

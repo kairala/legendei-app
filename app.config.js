@@ -27,9 +27,10 @@ export default {
         "expo-splash-screen",
         {
           autoHide: true,
-          backgroundColor: "#09090b",
+          backgroundColor: "#FFF9CC",
           image: "./assets/images/splash.png",
-          resizeMode: "cover",
+          resizeMode: "contain",
+          imageWidth: 200,
         },
       ],
       [
@@ -37,7 +38,16 @@ export default {
         {
           configureAndroidBackup: true,
           faceIDPermission:
-            "Allow $(PRODUCT_NAME) to access your Face ID biometric data.",
+            "Permirtir o uso do Face ID para desbloquear o aplicativo Legendei.",
+        },
+      ],
+      [
+        "expo-image-picker",
+        {
+          photosPermission:
+            "Legendei as imagens para podermos gerar legendas para você. Suas fotos serão armazenadas de forma segura e não serão compartilhadas com ninguém.",
+          cameraPermission:
+            "Legendei a câmera para tirar fotos e podermos gerar legendas para você. Suas fotos serão armazenadas de forma segura e não serão compartilhadas com ninguém.",
         },
       ],
       [

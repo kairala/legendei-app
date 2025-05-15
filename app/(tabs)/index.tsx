@@ -24,6 +24,7 @@ import { adUnits } from "../../components/ads/units";
 import { useGetMeQuery } from "../../src/features/auth/useMe";
 import { H4 } from "../../components/ui/typography";
 import { useRouter } from "expo-router";
+import { Toast } from "toastify-react-native";
 
 export default function Screen() {
   const [image, setImage] = React.useState<ImagePickerAsset | null>(null);
@@ -168,9 +169,11 @@ export default function Screen() {
   }, [image]);
 
   const pickImage = async () => {
+    console.log(mediaLibraryPermissionStatus);
     if (!mediaLibraryPermissionStatus?.granted) {
       const permission = await requestMediaLibraryPermission();
       if (!permission.granted) {
+        Toast.error("Precisamos de permissão para acessar sua galeria.");
         return;
       }
     }
@@ -192,8 +195,15 @@ export default function Screen() {
 
   const useCamera = async () => {
     if (!cameraPermissionStatus?.granted) {
-      const permission = await requestCameraPermission();
-      if (!permission.granted) {
+      try {
+        const permission = await requestCameraPermission();
+        if (!permission.granted) {
+          Toast.error("Precisamos de permissão para acessar sua câmera.");
+          return;
+        }
+      } catch (err) {
+        console.log("Error requesting camera permission", err);
+        Toast.error("Erro ao solicitar permissão para acessar a câmera.");
         return;
       }
     }
