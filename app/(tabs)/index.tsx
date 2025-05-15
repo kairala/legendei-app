@@ -26,6 +26,7 @@ import { H4 } from "../../components/ui/typography";
 import { useRouter } from "expo-router";
 import { Toast } from "toastify-react-native";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { cn } from "../../lib/utils";
 
 export default function Screen() {
   const [image, setImage] = React.useState<ImagePickerAsset | null>(null);
@@ -110,9 +111,9 @@ export default function Screen() {
           <H4 className=""> legendas hoje.</H4>
         </View>
         {usedCaptionsToday >= totalCaptions ? (
-          <Button className="mt-5">
-            <Text>Altere seu plano para criar mais</Text>
-          </Button>
+          <H4 className="mt-5 text-center border-2 p-4 rounded-xl border-muted-foreground border-dashed">
+            Clique aqui{"\n"}e altere seu plano para criar mais
+          </H4>
         ) : null}
       </View>
     );
@@ -172,7 +173,6 @@ export default function Screen() {
   }, [image]);
 
   const pickImage = async () => {
-    console.log(mediaLibraryPermissionStatus);
     if (!mediaLibraryPermissionStatus?.granted) {
       const permission = await requestMediaLibraryPermission();
       if (!permission.granted) {
@@ -242,11 +242,6 @@ export default function Screen() {
     <View className="flex flex-col gap-5 p-6 bg-secondary/30 h-full pb-10">
       {!caption && (
         <View className="flex-1 flex flex-col gap-6 h-full ">
-          <View>
-            <H4 className="text-center">
-              Escolha uma foto e a plataforma para gerar uma legenda.
-            </H4>
-          </View>
           <View className="flex flex-row gap-5 ">
             <View className="flex-1">
               <PlatformSelect
@@ -307,7 +302,12 @@ export default function Screen() {
               );
             }}
           >
-            <View className="h-full w-full bg-secondary flex justify-center items-center rounded-2xl border-dashed border-2 border-primary">
+            <View
+              className={cn(
+                "h-full w-full bg-secondary flex justify-center items-center rounded-2xl border-dashed border-2",
+                canCreateCaption ? "border-primary" : "border-destructive"
+              )}
+            >
               {uploadFileMutation.isPending ||
               generateCaptionMutation.isPending ? (
                 <View className="flex-1 flex justify-center items-center h-auto w-full p-6">
@@ -323,10 +323,11 @@ export default function Screen() {
                 </View>
               ) : (
                 <View>
-                  <H4 className="font-normal">
-                    Escolha a imagem para gerar a legenda
-                  </H4>
-
+                  {canCreateCaption && (
+                    <H4 className="font-normal">
+                      Escolha a imagem para gerar a legenda
+                    </H4>
+                  )}
                   {buildCaptionLimit()}
                 </View>
               )}
