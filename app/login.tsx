@@ -13,6 +13,7 @@ import useAuthSession from "../src/features/auth/useAuthSession";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
+import * as Sentry from "@sentry/react-native";
 
 // Define Zod schema
 const formSchema = z.object({
@@ -164,6 +165,10 @@ export default function Screen() {
       {googleError && (
         <Text className="text-destructive mt-1">{googleError}</Text>
       )}
+
+      <Button onPress={() => Sentry.captureException(new Error("TESTE"))}>
+        <Text>TRY</Text>
+      </Button>
 
       <Button className="w-full mt-2" onPress={handleSubmit(onSubmit)}>
         <Text>Entrar</Text>
