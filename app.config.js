@@ -16,6 +16,7 @@ export default {
     },
     android: {
       package: "br.com.kairala.legendei",
+      edgeToEdgeEnabled: true,
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#ffffff",

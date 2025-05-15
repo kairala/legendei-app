@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Platform, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import { Text } from "~/components/ui/text";
 import * as ImagePicker from "expo-image-picker";
 import { Button } from "~/components/ui/button";
@@ -25,6 +25,7 @@ import { useGetMeQuery } from "../../src/features/auth/useMe";
 import { H4 } from "../../components/ui/typography";
 import { useRouter } from "expo-router";
 import { Toast } from "toastify-react-native";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 export default function Screen() {
   const [image, setImage] = React.useState<ImagePickerAsset | null>(null);
@@ -32,6 +33,8 @@ export default function Screen() {
   const [style, setStyle] = React.useState<StyleName>("criativo");
   const [caption, setCaption] = React.useState<string | null>(null);
   const router = useRouter();
+  const { showActionSheetWithOptions } = useActionSheet();
+
   const { isLoaded, load, show } = useInterstitialAd(
     __DEV__
       ? TestIds.INTERSTITIAL
@@ -180,7 +183,7 @@ export default function Screen() {
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
-      allowsEditing: false,
+      allowsEditing: true,
       aspect: [16, 9],
       quality: 1,
       selectionLimit: 1,
@@ -210,7 +213,7 @@ export default function Screen() {
 
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ["images"],
-      allowsEditing: false,
+      allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
       selectionLimit: 0,
@@ -238,7 +241,7 @@ export default function Screen() {
   return (
     <View className="flex flex-col gap-5 p-6 bg-secondary/30 h-full pb-10">
       {!caption && (
-        <View className="flex-1 flex flex-col gap-6">
+        <View className="flex-1 flex flex-col gap-6 h-full ">
           <View>
             <H4 className="text-center">
               Escolha uma foto e a plataforma para gerar uma legenda.
@@ -266,38 +269,59 @@ export default function Screen() {
             </View>
           </View>
 
-          <View className="flex flex-row gap-5 justify-between">
-            <Button
-              onPress={pickImage}
-              className="flex-1"
-              disabled={!canCreateCaption}
-            >
-              <Text>Escolha uma Foto</Text>
-            </Button>
+          <TouchableOpacity
+            className="flex-1"
+            onPress={() => {
+              const options = ["Câmera", "Galeria", "Cancelar"];
+              const cancelButtonIndex = 2;
+              const cameraIndex = 0;
+              const galleryIndex = 1;
 
-            <Button
-              onPress={useCamera}
-              className="flex-1"
-              disabled={!canCreateCaption}
-            >
-              <Text>Use a Câmera</Text>
-            </Button>
-          </View>
+              showActionSheetWithOptions(
+                {
+                  options,
+                  cancelButtonIndex,
+                },
+                (selectedIndex: number | undefined) => {
+                  switch (selectedIndex) {
+                    case cameraIndex:
+                      useCamera();
+                      break;
+                    case galleryIndex:
+                      pickImage();
+                      break;
+                    case cancelButtonIndex:
+                      // Cancel button pressed
+                      break;
+                    default:
+                      // Handle other options if needed
+                      break;
+                  }
+                }
+              );
+            }}
+          >
+            <View className="h-full w-full bg-secondary flex justify-center items-center rounded-2xl border-dashed border-2 border-primary">
+              {/* {uploadFileMutation.isPending ||
+              generateCaptionMutation.isPending ? ( */}
+              <View className="flex-1 flex justify-center items-center h-auto w-full p-6">
+                {uploadFileMutation.isPending && (
+                  <Text>Fazendo upload da imagem...</Text>
+                )}
 
-          <View className="flex-1 flex justify-center items-center">
-            {uploadFileMutation.isPending && (
-              <Text>Fazendo upload da imagem...</Text>
-            )}
+                {generateCaptionMutation.isPending && (
+                  <Text>Gerando legenda...</Text>
+                )}
 
-            {generateCaptionMutation.isPending && (
-              <Text>Gerando legenda...</Text>
-            )}
-
-            {uploadFileMutation.isPending ||
-            generateCaptionMutation.isPending ? (
-              <Progress value={progress} className="web:w-[60%]" />
-            ) : null}
-          </View>
+                <Progress value={10} />
+              </View>
+              {/* ) : (
+                <H4 className="font-normal">
+                  Escolha a imagem para gerar a legenda
+                </H4>
+              )} */}
+            </View>
+          </TouchableOpacity>
         </View>
       )}
 
@@ -325,26 +349,28 @@ export default function Screen() {
         </View>
       )}
 
-      <View className="flex flex-row gap-5 justify-between w-full">
-        <Button
-          variant={"default"}
-          disabled={
-            uploadFileMutation.isPending ||
-            generateCaptionMutation.isPending ||
-            !caption
-          }
-          onPress={() => {
-            setImage(null);
-            setCaption(null);
-            if (isLoaded && me?.data.currentPlan === "free") {
-              show();
+      {caption && (
+        <View className="flex flex-row gap-5 justify-between w-full">
+          <Button
+            variant={"default"}
+            disabled={
+              uploadFileMutation.isPending ||
+              generateCaptionMutation.isPending ||
+              !caption
             }
-          }}
-          className="flex-1"
-        >
-          <Text>Limpar</Text>
-        </Button>
-      </View>
+            onPress={() => {
+              setImage(null);
+              setCaption(null);
+              if (isLoaded && me?.data.currentPlan === "free") {
+                show();
+              }
+            }}
+            className="flex-1"
+          >
+            <Text>Voltar</Text>
+          </Button>
+        </View>
+      )}
     </View>
   );
 }

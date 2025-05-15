@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import { ThemeToggle } from "../../components/ThemeToggle";
 import { Quote } from "../../lib/icons/QuoteIcon";
 import { HistoryIcon } from "../../lib/icons/HistoryIcon";
@@ -29,9 +29,11 @@ export default function TabLayout() {
             headerRight: () => <ThemeToggle />,
             tabBarIcon: ({ focused }) => {
               return (
-                <HistoryIcon
-                  className={focused ? "text-primary" : "text-foreground"}
-                />
+                <View className="flex items-center justify-center pt-2">
+                  <HistoryIcon
+                    className={focused ? "text-primary" : "text-foreground"}
+                  />
+                </View>
               );
             },
           }}
@@ -44,9 +46,11 @@ export default function TabLayout() {
             headerRight: () => <ThemeToggle />,
             tabBarIcon: ({ focused }) => {
               return (
-                <Quote
-                  className={focused ? "text-primary" : "text-foreground"}
-                />
+                <View className="flex items-center justify-center pt-2">
+                  <Quote
+                    className={focused ? "text-primary" : "text-foreground"}
+                  />
+                </View>
               );
             },
           }}
@@ -59,9 +63,11 @@ export default function TabLayout() {
             headerRight: () => <ThemeToggle />,
             tabBarIcon: ({ focused }) => {
               return (
-                <Settings
-                  className={focused ? "text-primary" : "text-foreground"}
-                />
+                <View className="flex items-center justify-center pt-2">
+                  <Settings
+                    className={focused ? "text-primary" : "text-foreground"}
+                  />
+                </View>
               );
             },
           }}
