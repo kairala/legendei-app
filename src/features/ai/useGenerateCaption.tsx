@@ -14,6 +14,8 @@ type Payload = {
   imageUrl: string;
   style: StyleName;
   network: PlatformName;
+  numberOfCharacters: number;
+  keywords: string[];
 };
 
 export const useGenerateCaptionMutation = ({

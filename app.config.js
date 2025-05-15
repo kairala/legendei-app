@@ -1,8 +1,10 @@
+var pjson = require("./package.json");
+
 export default {
   expo: {
     name: "Legendei",
     slug: "legendei",
-    version: "1.0.1",
+    version: pjson.version,
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     userInterfaceStyle: "automatic",

@@ -21,7 +21,7 @@
     "build:ios:production": "eas build --platform ios --profile production --no-wait --environment preview production",
     "buildAndSubmit:ios:production": "eas build --platform ios --profile production --auto-submit --no-wait --environment production",
     "submit:ios:production": "eas submit --platform ios --latest --profile production --no-wait",
-    "buildAndSubmit:all:production": "eas build --platform all --profile production --auto-submit --no-wait"
+    "buildAndSubmit:all:production": "pnpm release && eas build --platform all --profile production --auto-submit --no-wait"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.1.1",
