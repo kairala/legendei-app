@@ -35,7 +35,6 @@ export default function Screen() {
   const [caption, setCaption] = React.useState<string | null>(null);
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
-
   const { isLoaded, load, show } = useInterstitialAd(
     __DEV__
       ? TestIds.INTERSTITIAL
@@ -102,7 +101,7 @@ export default function Screen() {
         <View className="flex flex-row items-center justify-center">
           <H4 className="">Você usou </H4>
           <H4
-            className={`font-bold ${usedCaptionsToday < totalCaptions ? "" : "text-red-500"}`}
+            className={`font-bold ${usedCaptionsToday < totalCaptions ? "" : "text-destructive"}`}
           >
             {usedCaptionsToday}
           </H4>
@@ -319,7 +318,7 @@ export default function Screen() {
                     <Text>Gerando legenda...</Text>
                   )}
 
-                  <Progress value={10} />
+                  <Progress value={progress} />
                 </View>
               ) : (
                 <View>

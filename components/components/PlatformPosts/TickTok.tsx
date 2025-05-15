@@ -10,7 +10,7 @@ type Props = {
 
 export const TickTokPost = ({ image, caption }: Props) => {
   return (
-    <View className="w-full bg-black rounded-xl overflow-hidden mb-4">
+    <View className="w-full max-w-md bg-black rounded-xl overflow-hidden mb-4">
       {/* Post container */}
       <View className="relative">
         {/* Image area */}

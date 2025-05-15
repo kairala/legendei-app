@@ -19,7 +19,7 @@ export default function Screen() {
       <Separator className="my-4" />
 
       <Button onPress={logout} variant="outline" className="border-destructive">
-        <Text>Sair</Text>
+        <Text className="text-destructive">Sair</Text>
       </Button>
     </ScrollView>
   );
