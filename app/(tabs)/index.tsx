@@ -110,7 +110,7 @@ export default function Screen() {
           <H4 className=""> legendas hoje.</H4>
         </View>
         {usedCaptionsToday >= totalCaptions ? (
-          <Button className="mt-5" onPress={() => router.push("/payment")}>
+          <Button className="mt-5">
             <Text>Altere seu plano para criar mais</Text>
           </Button>
         ) : null}
@@ -246,8 +246,6 @@ export default function Screen() {
             <H4 className="text-center">
               Escolha uma foto e a plataforma para gerar uma legenda.
             </H4>
-
-            {buildCaptionLimit()}
           </View>
           <View className="flex flex-row gap-5 ">
             <View className="flex-1">
@@ -271,11 +269,19 @@ export default function Screen() {
 
           <TouchableOpacity
             className="flex-1"
+            disabled={
+              uploadFileMutation.isPending || generateCaptionMutation.isPending
+            }
             onPress={() => {
               const options = ["Câmera", "Galeria", "Cancelar"];
               const cancelButtonIndex = 2;
               const cameraIndex = 0;
               const galleryIndex = 1;
+
+              if (!canCreateCaption) {
+                router.push("/payment");
+                return;
+              }
 
               showActionSheetWithOptions(
                 {
@@ -302,24 +308,28 @@ export default function Screen() {
             }}
           >
             <View className="h-full w-full bg-secondary flex justify-center items-center rounded-2xl border-dashed border-2 border-primary">
-              {/* {uploadFileMutation.isPending ||
-              generateCaptionMutation.isPending ? ( */}
-              <View className="flex-1 flex justify-center items-center h-auto w-full p-6">
-                {uploadFileMutation.isPending && (
-                  <Text>Fazendo upload da imagem...</Text>
-                )}
+              {uploadFileMutation.isPending ||
+              generateCaptionMutation.isPending ? (
+                <View className="flex-1 flex justify-center items-center h-auto w-full p-6">
+                  {uploadFileMutation.isPending && (
+                    <Text>Fazendo upload da imagem...</Text>
+                  )}
 
-                {generateCaptionMutation.isPending && (
-                  <Text>Gerando legenda...</Text>
-                )}
+                  {generateCaptionMutation.isPending && (
+                    <Text>Gerando legenda...</Text>
+                  )}
 
-                <Progress value={10} />
-              </View>
-              {/* ) : (
-                <H4 className="font-normal">
-                  Escolha a imagem para gerar a legenda
-                </H4>
-              )} */}
+                  <Progress value={10} />
+                </View>
+              ) : (
+                <View>
+                  <H4 className="font-normal">
+                    Escolha a imagem para gerar a legenda
+                  </H4>
+
+                  {buildCaptionLimit()}
+                </View>
+              )}
             </View>
           </TouchableOpacity>
         </View>
