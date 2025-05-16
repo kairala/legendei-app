@@ -26,7 +26,7 @@ Sentry.init({
   sendDefaultPii: true,
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1,
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.2,
   integrations: [
     Sentry.mobileReplayIntegration(),
     Sentry.feedbackIntegration(),
