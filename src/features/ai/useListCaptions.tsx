@@ -3,6 +3,7 @@ import { useAxios } from "../base/useAxios";
 import { PlatformName } from "../../../components/components/PlatformSelect";
 import { StyleName } from "../../../components/components/StyleSelect";
 import { AxiosResponse } from "axios";
+import * as Network from "expo-network";
 
 export type GetCaptionsResponseType = {
   _id: string;
@@ -20,10 +21,11 @@ export const buildGetCaptionsQueryKey = () => ["captions"];
 
 export const useGetCaptionsQuery = () => {
   const axios = useAxios();
+  const { isInternetReachable } = Network.useNetworkState();
 
   return useQuery<AxiosResponse<GetCaptionsResponseType[]>>({
     queryKey: buildGetCaptionsQueryKey(),
     queryFn: () => axios.get(`/ia/caption`),
-    retry: true,
+    retry: isInternetReachable ? 3 : false,
   });
 };

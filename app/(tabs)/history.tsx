@@ -1,5 +1,11 @@
 import * as React from "react";
-import { View, FlatList, ActivityIndicator, Image } from "react-native";
+import {
+  View,
+  FlatList,
+  ActivityIndicator,
+  Image,
+  RefreshControl,
+} from "react-native";
 import { Text } from "~/components/ui/text";
 import { useGetCaptionsQuery } from "../../src/features/ai/useListCaptions";
 import { Button } from "../../components/ui/button";
@@ -9,9 +15,10 @@ import { Toast } from "toastify-react-native";
 import { H2 } from "../../components/ui/typography";
 import moment from "moment";
 import { Card, CardContent } from "../../components/ui/card";
+import {} from "react-native-gesture-handler";
 
 export default function Screen() {
-  const { data: captionsResponse, isLoading } = useGetCaptionsQuery();
+  const { data: captionsResponse, isLoading, refetch } = useGetCaptionsQuery();
 
   const captions = React.useMemo(() => {
     if (!captionsResponse) {
@@ -31,13 +38,16 @@ export default function Screen() {
         </View>
       ) : captions.length === 0 ? (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-gray-500">No captions found</Text>
+          <Text>Nenhuma legenda encontrada</Text>
         </View>
       ) : (
         <FlatList
           data={captions}
           keyExtractor={(item, index) =>
             item._id?.toString() || index.toString()
+          }
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={refetch} />
           }
           renderItem={({ item }) => (
             <Card className="p-4 rounded-lg shadow-sm mb-3">

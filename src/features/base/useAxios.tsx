@@ -2,6 +2,7 @@ import axios from "axios";
 import useAuthSession from "../auth/useAuthSession";
 import { useCallback, useEffect } from "react";
 import { useRouter } from "expo-router";
+import * as Network from "expo-network";
 
 export const useAxios = () => {
   const {
@@ -14,6 +15,8 @@ export const useAxios = () => {
     logout,
   } = useAuthSession();
   const router = useRouter();
+
+  const { isInternetReachable } = Network.useNetworkState();
 
   const executeRefreshToken = useCallback(async () => {
     try {
@@ -61,6 +64,7 @@ export const useAxios = () => {
 
   axiosInstance.interceptors.request.use((config) => {
     console.log("Request made with ", config);
+
     return config;
   });
 
@@ -70,7 +74,14 @@ export const useAxios = () => {
       return response;
     },
     (error) => {
-      if (error.response) {
+      if (
+        error.code === "ERR_NETWORK" ||
+        error.message === "Network Error" ||
+        !isInternetReachable
+      ) {
+        console.error("Network error: ", error);
+        router.push("/offline");
+      } else if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
         console.error("Response error: ", error.response.data);

@@ -4,6 +4,7 @@ import { PlatformName } from "../../../components/components/PlatformSelect";
 import { StyleName } from "../../../components/components/StyleSelect";
 import { AxiosResponse } from "axios";
 import Stripe from "stripe";
+import * as Network from "expo-network";
 
 export type GetProductsResponseType = {
   _id: string;
@@ -21,6 +22,7 @@ export const buildGetProductsQueryKey = () => ["captions"];
 
 export const useGetProductsQuery = () => {
   const axios = useAxios();
+  const { isInternetReachable } = Network.useNetworkState();
 
   return useQuery<
     AxiosResponse<
@@ -32,6 +34,6 @@ export const useGetProductsQuery = () => {
   >({
     queryKey: buildGetProductsQueryKey(),
     queryFn: () => axios.get(`/stripe/products`),
-    retry: true,
+    retry: isInternetReachable ? 3 : false,
   });
 };

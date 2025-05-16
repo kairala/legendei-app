@@ -97,6 +97,20 @@ export default Sentry.wrap(function RootLayout() {
               />
 
               <Stack.Screen
+                name="offline"
+                options={{
+                  title: "No Network",
+                  headerShown: false,
+                  headerRight: () => <ThemeToggle />,
+                  headerStyle: {
+                    backgroundColor: isDarkColorScheme
+                      ? DARK_THEME.colors.background
+                      : LIGHT_THEME.colors.background,
+                  },
+                }}
+              />
+
+              <Stack.Screen
                 name="signup"
                 options={{
                   title: "Criar conta",
